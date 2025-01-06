@@ -64,8 +64,7 @@
 #define SW                22
 
 // Relay constants
-#define RELAY             30
-#define RELAY1            32
+#define RELAY_PIM         15
 
 #define EN_HIGH_VOLTAGE   13 
 

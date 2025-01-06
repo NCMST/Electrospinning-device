@@ -40,7 +40,7 @@ void setup()
 
     // Crearea sarcinilor
     xTaskCreate(vTaskEncoder, "Encoder Task", 512, NULL, 1, NULL);
-    xTaskCreate(vTaskMotor, "Motor Task", 256, NULL, 1, NULL);
+    xTaskCreate(vTaskMotor, "Motor Task", 512, NULL, 1, NULL);
     xTaskCreate(vTaskLCD, "LCD Task", 256, NULL, 1, NULL);
     xTaskCreate(vTaskCommunication, "Communication Task", 128, NULL, 1, NULL);
     xTaskCreate(vTaskSensor, "Sensor Task", 256, NULL, 1, NULL);
@@ -124,6 +124,7 @@ void vTaskLCD(void *pvParameters)
 void vTaskMotor(void *pvParameters)
 {
     tb6600_m1.init();
+    pinMode(RELAY_PIM, OUTPUT);
     for (;;)
     {
         // motor2Speed = map(motor2Speed, 0, 200, 0, 255);
@@ -131,12 +132,16 @@ void vTaskMotor(void *pvParameters)
         tb6600_m1.set(motorDirection == HIGH ? CLOCKWISE : COUNTERCLOCKWISE, motor1Speed, THIRTYTWO_STEP);
         if (flag.start)
         {
+            digitalWrite(RELAY_PIM, HIGH);
+
             tb6600_m1.run(); // Rotește motorul la viteza setată
             motor.setSpeed(motor2Speed);
             motor.run(motorDirection == HIGH ? FORWARD : BACKWARD);
         }
         else
         {
+            digitalWrite(RELAY_PIM, LOW);
+
             tb6600_m1.active(false); // Oprește motorul
             motor.run(RELEASE);
         }
