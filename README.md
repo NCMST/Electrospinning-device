@@ -63,9 +63,9 @@
 
 <h2 id="software-board-code">Software Board Code</h2>
 <ul>
-  <li>See more about <a href="/Software/Source code">software board code.</a></li>
+  <li>See more about <a href="/Software/Source_code">software board code.</a></li>
   <!-- Builded file is ... -->
-  <li>Get hex, elf files: <a href="/Software/Source code/build/">software board code.</a></li>
+  <li>Get hex, elf files: <a href="/Software/Source_code/build/">software bulded code.</a></li>
 </ul>
 
 <h2>Usage</h2>

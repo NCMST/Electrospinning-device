@@ -149,6 +149,8 @@
  */
 #define RELAY_PIM 15
 
+#define PWM_PIN 9
+
 /**
  * @brief Relay pin for the high voltage control
  * 

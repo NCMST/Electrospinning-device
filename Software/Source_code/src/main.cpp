@@ -115,7 +115,7 @@ void setup()
     OCR1A = 249; // 14kHz
 
     OCR1B = (int)(pwmDutyCycle * OCR1A); // Set the PWM duty cycle 50%
-    pinMode(9, OUTPUT);
+    pinMode(PWM_PIN, OUTPUT);
 
     lcd.init();
     lcd.backlight();
