@@ -1,80 +1,65 @@
 name: PlatformIO CI
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [master]
   pull_request:
     branches: [master]
 
 jobs:
-  # Check if PlatformIO is installed
   setup:
     runs-on: ubuntu-latest
     steps:
       - name: Run setup
         run: pwd
 
-  # Build the PlatformIO project
   build:
     needs: setup
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
 
-      # Setup Python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
           architecture: "x64"
 
-      # Setup PlatformIO in PATH
       - name: Setup PlatformIO
         uses: n-vr/setup-platformio-action@v1
 
-      # Build the PlatformIO project
       - name: Build PlatformIO project
         run: |
           cd "Software/Source code"
           pio run
-          # Move output files to a directory
           mkdir -p output
           mv build output
 
-      # Upload build artifact
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: platformio-build
           path: build
 
-  # Test the PlatformIO project
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Checkout repository
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: platformio-build
           path: Software/Sourse code/build
-
-      # Run PlatformIO test
-      # - name: Test PlatformIO project
-      #   run: cd Software/Electrospining && pio test -e megaatmega2560 -v
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      # Deploy
       - name: Deploy
         run: echo "Deploying..."
+
