@@ -35,7 +35,7 @@ jobs:
 
       - name: Build PlatformIO project
         run: |
-          cd "Software/Source code"
+          cd "Software/Source_code"
           pio run
           mkdir -p output
           mv build output
@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: platformio-build
-          path: Software/Sourse code/build
+          path: Software/Sourse_code/build
 
   deploy:
     needs: test
