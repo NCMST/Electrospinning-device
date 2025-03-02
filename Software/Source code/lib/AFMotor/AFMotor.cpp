@@ -1,6 +1,15 @@
-// Adafruit Motor shield library
-// copyright Adafruit Industries LLC, 2009
-// this code is public domain, enjoy!
+/**
+ * @file AFMotor.cpp
+ * @author your name (you@domain.com)
+ * @brief Adafruit Motor shield library
+ * @version 0.1
+ * @date 2025-03-02
+ * 
+ * this code is public domain, enjoy!
+ * 
+ * @copyright copyright Adafruit Industries LLC, 2009
+ * 
+ */
 
 
 #if (ARDUINO >= 100)
@@ -24,10 +33,18 @@ uint8_t microstepcurve[] = {0, 50, 98, 142, 180, 212, 236, 250, 255};
 uint8_t microstepcurve[] = {0, 25, 50, 74, 98, 120, 141, 162, 180, 197, 212, 225, 236, 244, 250, 253, 255};
 #endif
 
+/**
+ * @brief Construct a new AFMotorController::AFMotorController object
+ * 
+ */
 AFMotorController::AFMotorController(void) {
     TimerInitalized = false;
 }
 
+/**
+ * @brief enable the motor controller
+ * 
+ */
 void AFMotorController::enable(void) {
   // setup the latch
   /*
@@ -49,7 +66,10 @@ void AFMotorController::enable(void) {
   digitalWrite(MOTORENABLE, LOW);
 }
 
-
+/**
+ * @brief latch a byte
+ * 
+ */
 void AFMotorController::latch_tx(void) {
   uint8_t i;
 
@@ -77,6 +97,10 @@ void AFMotorController::latch_tx(void) {
   digitalWrite(MOTORLATCH, HIGH);
 }
 
+/**
+ * @brief MC object of class AFMotorController
+ * 
+ */
 static AFMotorController MC;
 
 /******************************************
