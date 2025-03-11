@@ -175,7 +175,8 @@ enum MenuState
     SELECT_MOTOR1_SPEED,
     SELECT_MOTOR2_SPEED,
     SENSOR_VALUES,
-    TRAN_PWM_DUTY
+    TRAN_PWM_DUTY,
+    TRAN_PWM_FREQ
 };
 
 MenuState currentState = MAIN_MENU;

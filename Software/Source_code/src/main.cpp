@@ -46,6 +46,7 @@ uint8_t motorDirection = LOW;
  *
  */
 float pwmDutyCycle = 0.5;
+uint8_t pwmFreq = 39;
 float voltage = 0.0;
 float temperature = 0.0;
 float humidity = 0.0;
@@ -195,6 +196,16 @@ void vTaskLCD(void *pvParameters)
             lcd.setCursor(0, 1);
             lcd.print(pwmDutyCycle);
             break;
+        case TRAN_PWM_FREQ:
+            lcd.setCursor(0, 0);
+            lcd.print("PWM Freq:");
+            lcd.setCursor(10, 0);
+            lcd.print(int(16000000.0 / (8 * (OCR2A + 1)))); // Show the current frequency
+            lcd.setCursor(0, 1);
+            lcd.print("OCR2A:");
+            lcd.setCursor(6, 1);
+            lcd.print(OCR2A);
+            break;
         }
 
         vTaskDelay(TASK_DELAY_LCD / portTICK_PERIOD_MS); // Update the LCD every 500 ms
@@ -223,7 +234,7 @@ void vTaskMotor(void *pvParameters)
     TCCR2A = _BV(COM2B1) | _BV(WGM21) | _BV(WGM20); // Fast PWM, Non-inverting
     TCCR2B = _BV(WGM22) | _BV(CS21);                // Fast PWM cu prescaler = 8
 
-    OCR2A = 39; // Aproximativ 50 kHz
+    OCR2A = pwmFreq; // Aproximativ 50 kHz
 
     OCR2B = (int)(pwmDutyCycle * OCR2A); // Set the PWM duty cycle 50%
 
@@ -291,6 +302,10 @@ void vTaskEncoder(void *pvParameters)
                 Serial.println("PWM Duty");
                 break;
             case TRAN_PWM_DUTY:
+                currentState = TRAN_PWM_FREQ;
+                Serial.println("PWM Frequency");
+                break;
+            case TRAN_PWM_FREQ: 
                 currentState = MAIN_MENU;
                 Serial.println("Back to Main Menu");
                 break;
@@ -396,6 +411,19 @@ void vTaskEncoder(void *pvParameters)
             }
             OCR2B = (int)(pwmDutyCycle * OCR2A); // Set the PWM duty cycle 50%
             break;
+        case TRAN_PWM_FREQ:
+            if (enc.isLeft())
+            {
+                OCR2A++;
+                OCR2A > 255 ? OCR2A = 255 : OCR2A = OCR2A;
+                Serial.println("OCR2A: " + String(OCR2A));
+            }
+            else if (enc.isRight())
+            {
+                OCR2A--;
+                OCR2A < 0 ? OCR2A = 0 : OCR2A = OCR2A;
+                Serial.println("OCR2A: " + String(OCR2A));
+            }
         case SENSOR_VALUES:
             break;
         case MAIN_MENU:
@@ -420,7 +448,7 @@ void vTaskEncoder(void *pvParameters)
  */
 void vTaskCommunication(void *pvParameters)
 {
-    Serial.println("System Initialized\r\n s - start, d - direction, D- duty cycle, m - motor 1 speed, M - motor 2 speed\r\n");
+    Serial.println("System Initialized\r\n s - start, d - direction, D- duty cycle, F - PWM frequency, m - motor 1 speed, M - motor 2 speed\r\n");
 
     for (;;)
     {
@@ -445,6 +473,9 @@ void vTaskCommunication(void *pvParameters)
             case 'D':
                 val > 0 and val < 1 ? pwmDutyCycle = val : Serial.println("Wrong value for pwm duty cycle, value: " + String(val) + ", min: 0 - 0%, max: 1 - 100%");
                 OCR2B = (int)(pwmDutyCycle * OCR2A); // Set the PWM duty cycle 50%
+                break;
+            case 'F':
+                (int)val > 0 and (int) val < 255 ? OCR2A = (int)val : Serial.println("Wrong value for PWM frequency, value: " + String(val) + ", min: 0 - 0%, max: 1 - 100%");
                 break;
             case 'm':
                 val > 0 and val < 100 ? motor1Speed = val : Serial.println("Wrong value for motor 1 speed, value: " + String(val) + ", min: 0 - 0%, max: 1 - 100%");
