@@ -200,11 +200,12 @@ void vTaskLCD(void *pvParameters)
             lcd.setCursor(0, 0);
             lcd.print("PWM Freq:");
             lcd.setCursor(10, 0);
-            lcd.print(int(16000000.0 / (8 * (OCR2A + 1)))); // Show the current frequency
+            lcd.print(String(int((16000000.0 / (8 * (OCR2A + 1))/1000) * 10) / 10.0, 1) + "kHz"); // Show the current frequency with one decimal place
             lcd.setCursor(0, 1);
             lcd.print("OCR2A:");
+            int fill = (int)(100.0 * OCR2B / OCR2A);
             lcd.setCursor(6, 1);
-            lcd.print(OCR2A);
+            lcd.print(String(fill) + "%");
             break;
         }
 
