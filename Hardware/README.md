@@ -1,112 +1,61 @@
-# Electrospinning Device based on Arduino Mega
+# Electrospinning-device based on ESP32 S3 Hardware arhitecture
 
-## High voltage result and schematics
+## Key components
 
-### Reult
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#006100'
+    tertiaryColor: '#fff'
+---
+classDiagram
 
-<p> The result of the electrospinning process is accesible on link below. </p>
-<a href="https://docs.google.com/spreadsheets/d/1FEkuDaI_2rEFF1M06S9z06Yd7cQ-smT4pYeCvJsIN_U/edit?usp=sharing">Value on testing process</a>
+    atx24 --> esp32s3 : Power supply
+    esp32s3 --> atx24 : Power supply control signal
+    esp32s3 --> A4988 : Siringe pump
+    GXHT30 --> esp32s3 : Sensor
+    Encoder --> esp32s3 : UI
+    esp32s3 --> SSD1306 : UI
+    esp32s3 --> Termoresistor : safety sensor
+    esp32s3 --> Triac1 : Temperature control
+    esp32s3 --> Triac2 : Humidity control
+    esp32s3 --> L298N : Motor driver
+    Voltage --> esp32s3 : Power supply
+    Voltage2 --> esp32s3 : HVPS
 
-### Schematics
+    atx24 --> A4988
 
-## Hardware Connection
+    atx24 : power supply
+    atx24 : PC power supply
+    GXHT30 : temperature and humidity sensor
+    Encoder : Push button encoder
+    SSD1306 : LCD display
+    Termoresistor : Thermistor
+    A4988 : Stepper motor driver
+    esp32s3 : Super mini 
+    Triac1 : 220V Temperature control
+    Triac2 : 220V Humidity control
+    L298N : DC 2-10V 1.5A motor driver
+    Voltage : 12V
+    Voltage2 : High voltage power supply
 
-<h3>Display LCD I2C 16x2</h3>
-<table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>LCD Pin</th>
-  </tr>
-  <tr>
-    <td>20</td>
-    <td>21</td>
-  </tr>
-  <tr>
-    <td>SCL</td>
-    <td>SDA</td>
-  </tr>
-</table>
+```
+## Components Details
 
-<h3>Motor</h3>
-<table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>Driver TB6600</th>
-    <th>Motor Pin</th>
-  </tr>
-  <tr>
-    <td>48</td>
-    <td>ENA</td>
-    <td>Enable Motor</td>
-  </tr>
-  <tr>
-    <td>46</td>
-    <td>DIR</td>
-    <td>Direction Motor</td>
-  </tr>
-  <tr>
-    <td>44</td>
-    <td>PUL</td>
-    <td>Pulse Motor</td>
-  </tr>
-
-  <h3>Encoder</h3>
-  <table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>Driver TB6600</th>
-    <th>Encoder Pin</th>
-  </tr>
-  <tr>
-    <td>26</td>
-    <td>CLK</td>
-    <td>Encoder Clock</td>
-  </tr>
-  <tr>
-    <td>24</td>
-    <td>DT</td>
-    <td>Encoder Data transfer</td>
-  </tr>
-  <tr>
-    <td>22</td>
-    <td>SW</td>
-    <td>Encoder Switch select</td>
-  </tr>
-  </table>
-
-<h3>ADC</h3>
-<table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>ADC Pin</th>
-  </tr>
-  <tr>
-    <td>A9</td>
-    <td>ADC</td>
-  </tr>
-</table>
-
-<h3>PWM</h3>
-<table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>PWM Pin</th>
-  </tr>
-  <tr>
-    <td>9</td>
-    <td>PWM</td>
-  </tr>
-</table>
-
-<h3>Relay</h3>
-<table style="border: none;">
-  <tr>
-    <th>Arduino Pins</th>
-    <th>Relay Pin</th>
-  </tr>
-  <tr>
-    <td>15</td>
-    <td>Relay</td>
-  </tr>
-</table>
-
+- Power supply 350W : ATX24 
+- Stepper motor driver performance up to 35V and ± 1A, motors in fuji, half, 1/4, 1/8, and 1/16 step modes : A4988 
+- Temperature and humidity sensor : GXHT30
+- Push button encoder : Encoder
+- LCD display : SSD1306
+- Thermistor : Termoresistor
+- Temperature control BTA24 220V : Triac1
+- Humidity control BTA24 220V : Triac2
+- DC 2-10V 1.5A motor driver : L298N
+- 12V : Voltage
+- High voltage power supply : Voltage2

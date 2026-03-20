@@ -149,7 +149,14 @@
  */
 #define RELAY_PIM 15
 
+/**
+ * @brief PWM pin for the transformer
+ * - PWM_PIN - PWM pin for the transformer
+ * - PWM_DUTY_BUFF - Prescaler value to set frecvenc and duty cycle
+ * 
+ */
 #define PWM_PIN 9
+#define PWM_DUTY_BUFF 142 
 
 /**
  * @brief Relay pin for the high voltage control

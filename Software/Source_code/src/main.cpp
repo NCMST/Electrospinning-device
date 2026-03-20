@@ -110,13 +110,6 @@ void setup()
 
     vTaskStartScheduler();
 
-    TCCR1A = (1 << WGM10);
-    TCCR1B = (1 << WGM12) | (1 << CS11) | (1 << CS10);
-    OCR1A = 249; // 14kHz
-
-    OCR1B = (int)(pwmDutyCycle * OCR1A); // Set the PWM duty cycle 50%
-    pinMode(PWM_PIN, OUTPUT);
-
     lcd.init();
     lcd.backlight();
 
@@ -223,6 +216,16 @@ void vTaskMotor(void *pvParameters)
 {
     tb6600_m1.init();
     pinMode(RELAY_PIM, OUTPUT);
+
+    pinMode(PWM_PIN, OUTPUT);
+    
+    // Setare Timer2 în Fast PWM cu frecvență fixă
+    TCCR2A = (1 << WGM21) | (1 << WGM20) | (1 << COM2B1);  
+    TCCR2B = (1 << WGM22) | (1 << CS21);  // Prescaler 8
+
+    OCR2A = PWM_DUTY_BUFF;  // Frecvență ~14kHz
+    OCR2B = (int)(PWM_DUTY_BUFF * pwmDutyCycle);   // Duty cycle ~50%
+
     for (;;)
     {
         // motor2Speed = map(motor2Speed, 0, 200, 0, 255);
@@ -296,7 +299,7 @@ void vTaskEncoder(void *pvParameters)
                 break;
             }
         }
-        
+
         else if (enc.isDouble())
         {
             currentState = SENSOR_VALUES;
@@ -380,7 +383,7 @@ void vTaskEncoder(void *pvParameters)
             if (enc.isLeft())
             {
                 pwmDutyCycle += 0.1;
-                pwmDutyCycle > 1 ? pwmDutyCycle = 255 : pwmDutyCycle = pwmDutyCycle;
+                pwmDutyCycle > 1 ? pwmDutyCycle = 1 : pwmDutyCycle = pwmDutyCycle;
 
                 Serial.println("PWM Duty: " + String(pwmDutyCycle));
             }
@@ -390,9 +393,14 @@ void vTaskEncoder(void *pvParameters)
                 pwmDutyCycle < 0 ? pwmDutyCycle = 0 : pwmDutyCycle = pwmDutyCycle;
                 Serial.println("PWM Duty: " + String(pwmDutyCycle));
             }
+            OCR2B = (int)(PWM_DUTY_BUFF * pwmDutyCycle);   // Duty cycle
+            break;
+        case SENSOR_VALUES:
+            break;
+
+        case MAIN_MENU:
             break;
         }
-
         wdt_reset();
 
         vTaskDelay(TASK_DELAY_ENCODER / portTICK_PERIOD_MS);
@@ -435,6 +443,7 @@ void vTaskCommunication(void *pvParameters)
                 break;
             case 'D':
                 val > 0 and val < 1 ? pwmDutyCycle = val : Serial.println("Wrong value for pwm duty cycle, value: " + String(val) + ", min: 0 - 0%, max: 1 - 100%");
+                OCR2B = (int)(PWM_DUTY_BUFF * pwmDutyCycle);   // Duty cycle ~50%
                 break;
             case 'm':
                 val > 0 and val < 100 ? motor1Speed = val : Serial.println("Wrong value for motor 1 speed, value: " + String(val) + ", min: 0 - 0%, max: 1 - 100%");
