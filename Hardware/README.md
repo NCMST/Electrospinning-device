@@ -1,5 +1,6 @@
 # Electrospinning-device based on ESP32 S3 Hardware arhitecture
 
+[]()
 ## Key components
 
 ```mermaid
@@ -166,3 +167,9 @@ The ATX24 connector has 24 pins, while the ATX20 connector has 20 pins. The ATX2
   7. Built-in common conduction circuit, when the input pin is left floating, the motor does not malfunction.
   8. Built-in thermal protection circuit with hysteresis effects (TSD), without worrying about motor stall.
 
+## First view of the project
+
+![PCB](../Images/ESP-ES%20PCB.png)
+
+- [Project Homepage Link]( https://oshwlab.com/creciunelcatalin/esp-electrospinning)
+- [Open in Editor Project Link](https://easyeda.com/editor#project_id=5543cd4c7d524438b3cbe7d184eac1cf)
