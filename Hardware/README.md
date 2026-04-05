@@ -78,6 +78,8 @@ classDiagram
 	+ Fallback (Pin/Logic Compatible): TMC2225: Similar performance, different package but often available on same-pinout modules
 	+ Note: UART communication is essential for real-time current adjustment to prevent motor overheating
 
+  ![Connecting schema](https://meltbro.de/images/product_images/original_images/H1864dda99b3341a1ac1405a34ff42aber.jpg)
+
 ## DC Motor Driver
 ### DRV8833 (Collector)
 
@@ -85,6 +87,8 @@ classDiagram
 	+ Why: Replaces L298N because it doesn't need a heatsink and supports low voltage (2V-10V) with high efficiency
 	+ Fallback (Logic Compatible): TB6612FNG: Identical logic (IN1, IN2, PWM), very efficient
 	+ Fallback (Logic Compatible): MAX1508: For very small DC motors, low heat
+
+[Documentation](https://lastminuteengineers.com/drv8833-arduino-tutorial/)
 
 ## Environmental Sensor
 ### GXHT30
@@ -99,6 +103,10 @@ classDiagram
 * SSD1306 (128x64, I2C)
 	+ Fallback (I2C Compatible): SH1106: 1.3" OLED, requires a minor offset change in Zephyr dts
 	+ Fallback (I2C Compatible): SSD1309: 2.4" Large OLED for better visibility in the lab
+
+
+
+![Encoder](https://ae04.alicdn.com/kf/S76cb95c3189e4bb29b8eee5beeb6f112Z.jpg_640x640.jpg) [Product link](https://aliexpress.ru/item/1005004958941138.html?spm=a2g2w.orderdetail.0.0.6f374aa6PABbVD&sku_id=12000031156235749)
 
 ## AC Control
 ### BTA24 + MOC3041
@@ -116,7 +124,7 @@ To ensure the TMC2209 UART and other peripherals don't conflict:
 | I2C Bus | SDA / SCL | 17/18 | Shared (Sensors + Display) |
 | TMC2209 | UART TX / RX | 15 / 16 | Serial Config | 
 | TMC2209 | STEP / DIR | 41 / 42 | High-speed Pulse | 
-| DRV8833 | PWM / IN1 / IN2 | 4, 5, 6 | Motor Speed/Dir | 
+| DRV8833 | PWM(IN1) / IN2 | 4, 5 | Motor Speed/Dir | 
 | ATX24 | PS_ON | 7 | Power Control | 
 | Encoder | A / B / SW | 1, 2, 3 | UI Navigation | 
 | Triacs | Trigger 1 / 2 | 39 / 40 | AC Switching | 
