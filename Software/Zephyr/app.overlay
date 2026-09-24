@@ -1,0 +1,129 @@
+/ {
+    aliases {
+        triac1 = &triac_1;
+        triac2 = &triac_2;
+        atxon = &atx_on;
+        atxpg = &atx_pg;
+        endstop1 = &endstop_1;
+        endstop2 = &endstop_2;
+        encsw = &enc_sw;
+        enca = &enc_a;
+        encb = &enc_b;
+        m1-step = &m1_step;
+        m1-dir = &m1_dir;
+        m1-en = &m1_en;
+        m2-step = &m2_step;
+        m2-dir = &m2_dir;
+        m2-en = &m2_en;
+    };
+
+    custom_outputs {
+        compatible = "gpio-leds";
+
+        triac_1: triac_1 {
+            gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+        };
+        triac_2: triac_2 {
+            gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
+        };
+
+        atx_on: atx_on {
+            gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+        };
+
+        m1_step: m1_step {
+            gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+        };
+        m1_dir: m1_dir {
+            gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+        };
+        m1_en: m1_en {
+            gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
+        };
+
+        m2_step: m2_step {
+            gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+        };
+        m2_dir: m2_dir {
+            gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+        };
+        m2_en: m2_en {
+            gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
+        };
+    };
+
+    custom_inputs {
+        compatible = "gpio-keys";
+
+        atx_pg: atx_pg {
+            gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+        };
+
+        endstop_1: endstop_1 {
+            gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+        };
+        endstop_2: endstop_2 {
+            gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+        };
+
+        enc_sw: enc_sw {
+            gpios = <&gpio0 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        };
+        enc_a: enc_a {
+            gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+        };
+        enc_b: enc_b {
+            gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
+        };
+    };
+};
+
+&pinctrl {
+    i2c0_default: i2c0_default {
+        group1 {
+            pinmux = <I2C0_SDA_GPIO17>, <I2C0_SCL_GPIO18>;
+            bias-pull-up;
+            drive-open-drain;
+            output-high;
+        };
+    };
+
+    uart1_default: uart1_default {
+        group1 {
+            pinmux = <UART1_TX_GPIO15>, <UART1_RX_GPIO16>;
+        };
+    };
+};
+
+&i2c0 {
+    status = "okay";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-names = "default";
+    clock-frequency = <I2C_BITRATE_FAST>;
+
+    ssd1306: ssd1306@3c {
+        compatible = "solomon,ssd1306";
+        reg = <0x3c>;
+        width = <128>;
+        height = <64>;
+        segment-offset = <0>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <63>;
+        segment-remap;
+        com-invdir;
+        prechargep = <0x22>;
+    };
+
+    sht30: sht30@44 {
+        compatible = "sensirion,sht3xd";
+        reg = <0x44>;
+    };
+};
+
+&uart1 {
+    status = "okay";
+    pinctrl-0 = <&uart1_default>;
+    pinctrl-names = "default";
+    current-speed = <115200>;
+};
